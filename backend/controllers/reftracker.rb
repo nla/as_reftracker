@@ -13,9 +13,13 @@ class ArchivesSpaceService < Sinatra::Base
     .description("Get a question from RefTracker")
     .params(['qno', String, 'The question number to get'])
     .permissions([])
-    .returns([200, "question"]) \
+    .returns([200, "question"], [404, 'not found']) \
   do
-    RefTrackerClient.get_question(params[:qno])
+    begin
+      json_response(RefTrackerClient.get_question(params[:qno]))
+    rescue RecordNotFound => e
+      json_response({:error => e.message}, 404)
+    end
   end
 
   Endpoint.post('/repositories/:repo_id/accessions/reftracker_import/:qno')
@@ -23,15 +27,22 @@ class ArchivesSpaceService < Sinatra::Base
     .params(["repo_id", :repo_id],
             ['qno', String, 'The question number to import'])
     .permissions([])
-    .returns([200, "success"]) \
+    .returns([200, "success"], [404, "not found"]) \
   do
+    # surely someone has written a method for this
+    agent_map = {
+      'agent_person' => AgentPerson,
+      'agent_corporate_entity' => AgentCorporateEntity,
+      'agent_family' => AgentFamily,
+    }
+
     begin
       rt_question = RefTrackerClient.get_question(params[:qno])
 
-      # FIXME: not handling agent yet
       agent = RefTrackerMapper.map_agent(rt_question)
+      agent_obj = agent_map[agent['jsonmodel_type']].create_from_json(agent)
 
-      acc = RefTrackerMapper.map_accession(rt_question)
+      acc = RefTrackerMapper.map_accession(rt_question, agent_obj.uri)
 
       handle_create(Accession, acc)
     rescue RecordNotFound => e

@@ -2,11 +2,52 @@ class RefTrackerMapper
 
   include JSONModel
 
-  def self.map_agent(qp)
-    agent = {}
+  def self.agent_type_map
+    {
+      'Person' => :agent_person,
+      'Corporate entity' => :agent_corporate_entity,
+      'Family' => :agent_family,
+    }
   end
 
-  def self.map_accession(qp)
+  def self.map_agent(qp)
+    agent = {}
+
+    # these come in as: Person, Corporate entity, Family
+    type = self.agent_type_map[qp['client_udf_cl01']]
+
+    agent['jsonmodel_type'] = type
+
+    agent['agent_contacts'] = [{}]
+    agent['agent_contacts'][0]['address_1'] = qp['client_address1']
+    agent['agent_contacts'][0]['address_2'] = qp['client_address2']
+    agent['agent_contacts'][0]['city'] = qp['client_city']
+    agent['agent_contacts'][0]['country'] = qp['client_country_id']
+    agent['agent_contacts'][0]['email'] = qp['client_email']
+    agent['agent_contacts'][0]['name'] = qp['client_name']
+    agent['agent_contacts'][0]['post_code'] = qp['client_zipcode']
+    agent['agent_contacts'][0]['region'] = qp['client_state_id']
+    agent['agent_contacts'][0]['telephones'] = [{'number' => qp['client_phone']}]
+
+    agent['names'] = [{}]
+    agent['names'][0]['name_order'] = 'inverted'
+    agent['names'][0]['primary_name'] = qp['client_region']
+    agent['names'][0]['sort_name'] = qp['client_region']
+    agent['names'][0]['source'] = 'local'
+
+    agent['notes'] = [{}, {}]
+    agent['notes'][0]['jsonmodel_type'] = 'note_general_context'
+    agent['notes'][0]['lobel'] = 'Vendor Code'
+    agent['notes'][0]['subnotes'] = [{'jsonmodel_type' => 'note_text', 'content' => qp['bib_pubname']}]
+    agent['notes'][1]['jsonmodel_type'] = 'note_bioghist'
+    agent['notes'][1]['lobel'] = 'Biographical/Historical Notes'
+    agent['notes'][1]['subnotes'] = [{'jsonmodel_type' => 'note_text', 'content' => qp['question_udf_ta01']}]
+
+    JSONModel::JSONModel(type).from_hash(agent)
+  end
+
+
+  def self.map_accession(qp, agent_uri)
     acc = {}
 
     acc['title'] = qp['bib_title']
@@ -78,12 +119,16 @@ class RefTrackerMapper
                                        qp['bib_comment'],
                                        'CATALOGUING NOTES')
 
-    # TODO: agent
+    acc['linked_agents'] = [{}]
+    acc['linked_agents'][0]['ref'] = agent_uri
+    acc['linked_agents'][0]['role'] = 'source'
+
+    # TODO: events
     # TODO: subjects
-    # TODO: the actual import
 
     JSONModel::JSONModel(:accession).from_hash(acc)
   end
+
 
   def self.munge(acc_val, qp_val, prefix = false)
     if qp_val
