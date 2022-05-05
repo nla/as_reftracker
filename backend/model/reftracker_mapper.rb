@@ -8,7 +8,13 @@ class RefTrackerMapper
     acc = {}
 
     acc['title'] = qp['bib_title']
-    acc['id_0'] = qp['bib_number']
+
+    # the spreadsheet says question_udf_tb07
+    # but when I edited the field in RT it turned up in bib_udf_tb03
+    acc['id_0'] = qp['bib_udf_tb03']
+    # acc['id_0'] = qp['question_udf_tb07']
+    # acc['id_0'] = qp['bib_number']
+
     acc['accession_date'] = qp['question_closed_datetime'].split[0]
     acc['access_restrictions_note'] = qp['question_udf_ta15']
     acc['acquisition_type'] = qp['question_udf_cl03'].downcase
@@ -20,7 +26,9 @@ class RefTrackerMapper
     acc['user_defined'] = {}
     acc['user_defined']['boolean_1'] = qp['bib_udf_cl01'] == 'New collection'
     acc['user_defined']['integer_2'] = qp['bib_callno']
-    acc['user_defined']['real_3'] = qp['bib_price_actual']
+
+    acc['user_defined']['real_3'] = qp['bib_price_actual'].gsub(/,/, '')
+
     acc['user_defined']['string_2'] = qp['question_no']
     acc['user_defined']['string_3'] = qp['question_udf_tb08']
     acc['user_defined']['text_2'] = qp['question_udf_tb03']
