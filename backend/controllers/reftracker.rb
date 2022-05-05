@@ -40,7 +40,7 @@ class ArchivesSpaceService < Sinatra::Base
       rt_question = RefTrackerClient.get_question(params[:qno])
 
       subject = JSONModel(:subject).from_hash(RefTrackerMapper.map_subject(rt_question))
-      subject_obj = Subject.create_from_json(subject)
+      subject_obj = Subject.ensure_exists(subject, 'accession')
 
       agent = RefTrackerMapper.map_agent(rt_question)
       agent_obj = agent_map[agent['jsonmodel_type']].create_from_json(agent)
