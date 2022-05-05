@@ -18,15 +18,18 @@ class ArchivesSpaceService < Sinatra::Base
     RefTrackerClient.get_question(params[:qno])
   end
 
-  Endpoint.post('/plugins/reftracker/import/:qno')
-    .description("Import a question from RefTracker")
-    .params(['qno', String, 'The question number to import'])
+  Endpoint.post('/repositories/:repo_id/accessions/reftracker_import/:qno')
+    .description("Import a question from RefTracker as an Accession")
+    .params(["repo_id", :repo_id],
+            ['qno', String, 'The question number to import'])
     .permissions([])
     .returns([200, "success"]) \
   do
     acc = RefTrackerMapper.map(RefTrackerClient.get_question(params[:qno]))
-    # just returning the mapped accession for now
-    json_response(acc.to_hash)
+
+    # FIXME: not handling agent yet
+
+    handle_create(Accession, acc)
   end
 
 end
