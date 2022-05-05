@@ -47,7 +47,14 @@ class ArchivesSpaceService < Sinatra::Base
 
       acc = RefTrackerMapper.map_accession(rt_question, agent_obj.uri, subject_obj.uri)
 
-      handle_create(Accession, acc)
+      acc_obj = Accession.create_from_json(JSONModel(:accession).from_hash(acc))
+
+      events = RefTrackerMapper.map_events(rt_question, acc_obj.uri, agent_obj.uri)
+
+      events.each{|ev| Event.create_from_json(JSONModel(:event).from_hash(ev))}
+
+      json_response({'status' => 'Import Successful', 'uri' => acc_obj.uri})
+
     rescue RecordNotFound => e
       json_response({:error => e.message}, 404)
     end

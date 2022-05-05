@@ -2,12 +2,37 @@ class RefTrackerMapper
 
   include JSONModel
 
-  def self.agent_type_map
-    {
-      'Person' => :agent_person,
-      'Corporate entity' => :agent_corporate_entity,
-      'Family' => :agent_family,
-    }
+
+  def self.map_events(qp, accession_uri, agent_uri)
+    events = []
+
+    if qp['question_udf_dt01']
+      events << {
+        'event_type' => 'agreement_sent',
+        'date' => {
+          'date_type' => 'single',
+          'label' => 'event',
+          'begin' => qp['question_udf_dt01'].split[0],
+        },
+        'linked_records' => [{'ref' => accession_uri, 'role' => 'source'}],
+        'linked_agents' => [{'ref' => agent_uri, 'role' => 'transmitter'}],
+      }
+    end
+
+    if qp['question_udf_dt02']
+      events << {
+        'event_type' => 'agreement_received',
+        'date' => {
+          'date_type' => 'single',
+          'label' => 'event',
+          'begin' => qp['question_udf_dt02'].split[0],
+        },
+        'linked_records' => [{'ref' => accession_uri, 'role' => 'source'}],
+        'linked_agents' => [{'ref' => agent_uri, 'role' => 'transmitter'}],
+      }
+    end
+
+    events
   end
 
   def self.map_subject(qp)
@@ -21,6 +46,15 @@ class RefTrackerMapper
     subject['terms'][0]['vocabulary'] = '/vocabularies/1'
 
     subject
+  end
+
+
+  def self.agent_type_map
+    {
+      'Person' => :agent_person,
+      'Corporate entity' => :agent_corporate_entity,
+      'Family' => :agent_family,
+    }
   end
 
 
