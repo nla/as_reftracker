@@ -10,6 +10,20 @@ class RefTrackerMapper
     }
   end
 
+  def self.map_subject(qp)
+    subject = {}
+
+    subject['source'] = 'local'
+    subject['vocabulary'] = '/vocabularies/1'
+    subject['terms'] = [{}]
+    subject['terms'][0]['term'] = qp['question_udf_cl10']
+    subject['terms'][0]['term_type'] = 'topical'
+    subject['terms'][0]['vocabulary'] = '/vocabularies/1'
+
+    subject
+  end
+
+
   def self.map_agent(qp)
     agent = {}
 
@@ -47,7 +61,7 @@ class RefTrackerMapper
   end
 
 
-  def self.map_accession(qp, agent_uri)
+  def self.map_accession(qp, agent_uri, subject_uri)
     acc = {}
 
     acc['title'] = qp['bib_title']
@@ -123,8 +137,9 @@ class RefTrackerMapper
     acc['linked_agents'][0]['ref'] = agent_uri
     acc['linked_agents'][0]['role'] = 'source'
 
+    acc['subjects'] = [{'ref' => subject_uri}]
+
     # TODO: events
-    # TODO: subjects
 
     JSONModel::JSONModel(:accession).from_hash(acc)
   end
