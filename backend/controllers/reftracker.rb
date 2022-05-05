@@ -37,6 +37,7 @@ class ArchivesSpaceService < Sinatra::Base
     }
 
     begin
+
       rt_question = RefTrackerClient.get_question(params[:qno])
 
       subject = JSONModel(:subject).from_hash(RefTrackerMapper.map_subject(rt_question))
@@ -46,11 +47,9 @@ class ArchivesSpaceService < Sinatra::Base
       agent_obj = agent_map[agent['jsonmodel_type']].ensure_exists(agent, 'accession')
 
       acc = RefTrackerMapper.map_accession(rt_question, agent_obj.uri, subject_obj.uri)
-
       acc_obj = Accession.create_from_json(JSONModel(:accession).from_hash(acc))
 
       events = RefTrackerMapper.map_events(rt_question, acc_obj.uri, agent_obj.uri)
-
       events.each{|ev| Event.create_from_json(JSONModel(:event).from_hash(ev))}
 
       json_response({'status' => 'Import Successful', 'uri' => acc_obj.uri})
