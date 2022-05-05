@@ -2,9 +2,11 @@ class RefTrackerMapper
 
   include JSONModel
 
-  def self.map(question)
-    qp = ASUtils.json_parse(question)
+  def self.map_agent(qp)
+    agent = {}
+  end
 
+  def self.map_accession(qp)
     acc = {}
 
     acc['title'] = qp['bib_title']

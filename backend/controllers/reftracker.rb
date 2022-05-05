@@ -25,11 +25,18 @@ class ArchivesSpaceService < Sinatra::Base
     .permissions([])
     .returns([200, "success"]) \
   do
-    acc = RefTrackerMapper.map(RefTrackerClient.get_question(params[:qno]))
+    begin
+      rt_question = RefTrackerClient.get_question(params[:qno])
 
-    # FIXME: not handling agent yet
+      # FIXME: not handling agent yet
+      agent = RefTrackerMapper.map_agent(rt_question)
 
-    handle_create(Accession, acc)
+      acc = RefTrackerMapper.map_accession(rt_question)
+
+      handle_create(Accession, acc)
+    rescue RecordNotFound => e
+      json_response({:error => e.message}, 404)
+    end
   end
 
 end
