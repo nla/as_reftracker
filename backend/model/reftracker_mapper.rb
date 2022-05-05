@@ -79,8 +79,8 @@ class RefTrackerMapper
 
     agent['names'] = [{}]
     agent['names'][0]['name_order'] = 'inverted'
-    agent['names'][0]['primary_name'] = qp['client_region']
-    agent['names'][0]['sort_name'] = qp['client_region']
+    agent['names'][0]['primary_name'] = qp['client_region'] || qp['client_name']
+    agent['names'][0]['sort_name'] = qp['client_region'] || qp['client_name']
     agent['names'][0]['source'] = 'local'
 
     agent['notes'] = []
@@ -128,7 +128,7 @@ class RefTrackerMapper
     acc['user_defined']['boolean_1'] = qp['bib_udf_cl01'] == 'New collection'
     acc['user_defined']['integer_2'] = qp['bib_callno']
 
-    acc['user_defined']['real_3'] = qp['bib_price_actual'].gsub(/,/, '')
+    acc['user_defined']['real_3'] = qp['bib_price_actual'].gsub(/,/, '') if qp['bib_price_actual']
 
     acc['user_defined']['string_2'] = qp['question_no']
     acc['user_defined']['string_3'] = qp['question_udf_tb08']
