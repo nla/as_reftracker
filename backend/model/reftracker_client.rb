@@ -17,7 +17,7 @@ class RefTrackerClient
   def self.closed_questions
     columns = ['question_no', 'question_text', 'bib_number', 'bib_title', 'client_name']
 
-    # status of 700 is 'Closed successful'
+    # status of 700 is 'Closed successful' found this using /codetable?table=status
     # db = 5 is a magic number from the original plugin.
     #        without it the api complains about missing a param called 'source'
     search_params = {
