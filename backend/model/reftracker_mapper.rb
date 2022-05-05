@@ -83,13 +83,23 @@ class RefTrackerMapper
     agent['names'][0]['sort_name'] = qp['client_region']
     agent['names'][0]['source'] = 'local'
 
-    agent['notes'] = [{}, {}]
-    agent['notes'][0]['jsonmodel_type'] = 'note_general_context'
-    agent['notes'][0]['lobel'] = 'Vendor Code'
-    agent['notes'][0]['subnotes'] = [{'jsonmodel_type' => 'note_text', 'content' => qp['bib_pubname']}]
-    agent['notes'][1]['jsonmodel_type'] = 'note_bioghist'
-    agent['notes'][1]['lobel'] = 'Biographical/Historical Notes'
-    agent['notes'][1]['subnotes'] = [{'jsonmodel_type' => 'note_text', 'content' => qp['question_udf_ta01']}]
+    agent['notes'] = []
+
+    if qp['bib_pubname']
+      agent['notes'] << {
+        'jsonmodel_type' => 'note_general_context',
+        'lobel' => 'Vendor Code',
+        'subnotes' => [{'jsonmodel_type' => 'note_text', 'content' => qp['bib_pubname']}]
+      }
+    end
+
+    if qp['question_udf_ta01']
+      agent['notes'] << {
+        'jsonmodel_type' => 'note_bioghist',
+        'lobel' => 'Biographical/Historical Notes',
+        'subnotes' => [{'jsonmodel_type' => 'note_text', 'content' => qp['question_udf_ta01']}]
+      }
+    end
 
     JSONModel::JSONModel(type).from_hash(agent)
   end
