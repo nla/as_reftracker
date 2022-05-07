@@ -35,17 +35,32 @@ class RefTrackerMapper
     events
   end
 
-  def self.map_subject(qp)
-    subject = {}
+  def self.map_subjects(qp)
+    subjects = []
 
-    subject['source'] = 'local'
-    subject['vocabulary'] = '/vocabularies/1'
-    subject['terms'] = [{}]
-    subject['terms'][0]['term'] = qp['question_udf_cl10']
-    subject['terms'][0]['term_type'] = 'topical'
-    subject['terms'][0]['vocabulary'] = '/vocabularies/1'
+    terms = [
+             'question_udf_cl10',
+             'question_udf_cl09',
+            ]
 
-    subject
+
+    terms.each do |term|
+      if qp[term]
+        subjects << {
+          'source' => 'local',
+          'vocabulary' => '/vocabularies/1',
+          'terms' => [
+                      {
+                        'term' =>  qp[term],
+                        'term_type' => 'topical',
+                        'vocabulary' => '/vocabularies/1',
+                      }
+                     ]
+        }
+      end
+    end
+
+    subjects
   end
 
 
@@ -89,7 +104,7 @@ class RefTrackerMapper
       agent['notes'] << {
         'jsonmodel_type' => 'note_general_context',
         'lobel' => 'Vendor Code',
-        'subnotes' => [{'jsonmodel_type' => 'note_text', 'content' => qp['bib_pubname']}]
+        'subnotes' => [{'jsonmodel_type' => 'note_text', 'content' => qp['bib_udf_tb04']}]
       }
     end
 
@@ -97,7 +112,7 @@ class RefTrackerMapper
       agent['notes'] << {
         'jsonmodel_type' => 'note_bioghist',
         'lobel' => 'Biographical/Historical Notes',
-        'subnotes' => [{'jsonmodel_type' => 'note_text', 'content' => qp['question_udf_ta01']}]
+        'subnotes' => [{'jsonmodel_type' => 'note_text', 'content' => qp['bib_udf_ta03']}]
       }
     end
 
@@ -105,7 +120,7 @@ class RefTrackerMapper
   end
 
 
-  def self.map_accession(qp, agent_uri, subject_uri)
+  def self.map_accession(qp, agent_uri, subject_uris)
     acc = {}
 
     acc['title'] = qp['bib_title']
@@ -118,7 +133,7 @@ class RefTrackerMapper
     acc['content_description'] = qp['question_udf_ta08'] || qp['question_text']
     acc['disposition'] = qp['bib_volume']
     acc['inventory'] = qp['question_udf_tb11']
-    acc['provenance'] = qp['question_looked']
+    acc['provenance'] = qp['bib_udf_ta01']
     acc['retention_rule'] = qp['question_udf_ta16']
     acc['user_defined'] = {}
     acc['user_defined']['boolean_1'] = qp['bib_udf_cl01'] == 'New collection'
@@ -128,7 +143,7 @@ class RefTrackerMapper
 
     acc['user_defined']['string_2'] = qp['question_no']
     acc['user_defined']['string_3'] = qp['question_udf_tb08']
-    acc['user_defined']['text_2'] = qp['question_udf_tb03']
+    acc['user_defined']['text_2'] = qp['bib_udf_ta02']
     acc['user_defined']['text_4'] = qp['question_udf_tb15']
     acc['user_defined']['text_5'] = qp['question_udf_ta09']
     acc['user_defined']['controlled_value_1'] = qp['question_udf_cl18']
@@ -147,8 +162,8 @@ class RefTrackerMapper
     acc['extents'][0]['extent_type'] = 'collection'
 
     acc['retention_rule'] = self.munge(acc['retention_rule'],
-                                       qp['question_usefor'],
-                                       'STATEMENT OF SIGINIFICANCE')
+                                       qp['bib_udf_ta04'],
+                                       'STATEMENT OF SIGNIFICANCE')
 
     acc['retention_rule'] = self.munge(acc['retention_rule'],
                                        qp['question_udf_tb06'],
@@ -174,9 +189,8 @@ class RefTrackerMapper
     acc['linked_agents'][0]['ref'] = agent_uri
     acc['linked_agents'][0]['role'] = 'source'
 
-    acc['subjects'] = [{'ref' => subject_uri}]
-
-    # TODO: events
+    acc['subjects'] = []
+    subject_uris.each{|uri| acc['subjects'] << {'ref' => uri}}
 
     JSONModel::JSONModel(:accession).from_hash(acc)
   end
