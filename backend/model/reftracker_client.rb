@@ -24,14 +24,24 @@ class RefTrackerClient
 
 
   def self.closed_questions
-    columns = ['question_no', 'question_text', 'bib_number', 'bib_title', 'client_name']
+    columns = [
+               'question_no',
+               'question_text',
+               'bib_udf_tb03',
+               'bib_title',
+               'client_name',
+               'question_closed_datetime',
+              ]
 
     # status of 700 is 'Closed successful' found this using /codetable?table=status
     # db = 5 is a magic number from the original plugin.
     #        without it the api complains about missing a param called 'source'
+    # sortby = 3 is ClosedDate
     search_params = {
       :status => '700',
       :db => '5',
+      :sortby => '3',
+      :sortorder => 'DESC',
       :columnList => columns.join('|'),
     }
     self.get('search', {:parameters => search_params.to_json})

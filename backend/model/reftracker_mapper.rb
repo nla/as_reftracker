@@ -110,11 +110,7 @@ class RefTrackerMapper
 
     acc['title'] = qp['bib_title']
 
-    # the spreadsheet says question_udf_tb07
-    # but when I edited the field in RT it turned up in bib_udf_tb03
     acc['id_0'] = qp['bib_udf_tb03']
-    # acc['id_0'] = qp['question_udf_tb07']
-    # acc['id_0'] = qp['bib_number']
 
     acc['accession_date'] = qp['question_closed_datetime'].split[0]
     acc['access_restrictions_note'] = qp['question_udf_ta15']
@@ -146,12 +142,9 @@ class RefTrackerMapper
     acc['extents'] = [{}]
     acc['extents'][0]['container_summary'] = qp['bib_udf_tb01']
 
-    # these are required but not in the mapping spec
-    # could try to parse them out of the summary :(
     acc['extents'][0]['portion'] = 'whole'
     acc['extents'][0]['number'] = '1'
-    acc['extents'][0]['extent_type'] = 'volumes'
-
+    acc['extents'][0]['extent_type'] = 'collection'
 
     acc['retention_rule'] = self.munge(acc['retention_rule'],
                                        qp['question_usefor'],
