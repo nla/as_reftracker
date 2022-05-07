@@ -2,11 +2,11 @@ class ArchivesSpaceService < Sinatra::Base
 
   Endpoint.get('/plugins/reftracker/offers')
     .description("Get a list of offers that are ready to import from RefTracker")
-    .params()
+    .params(['page', Integer, "Page number", :default => 1])
     .permissions([])
     .returns([200, "[offers]"]) \
   do
-    RefTrackerClient.closed_questions
+    RefTrackerClient.closed_offers(params[:page])
   end
 
   Endpoint.get('/plugins/reftracker/question/:qno')

@@ -23,7 +23,7 @@ class RefTrackerClient
   end
 
 
-  def self.closed_questions
+  def self.closed_offers(page = 1)
     columns = [
                'question_no',
                'question_text',
@@ -43,6 +43,8 @@ class RefTrackerClient
       :sortby => '3',
       :sortorder => 'DESC',
       :columnList => columns.join('|'),
+      :pagenumber => page,
+      :pagesize => 20,
     }
     self.get('search', {:parameters => search_params.to_json})
   end
