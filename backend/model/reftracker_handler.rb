@@ -38,8 +38,12 @@ class RefTrackerHandler
 
           out.last[:uri] = acc_obj.uri
           out.last[:identifier] = acc['id_0']
-        rescue => e
-          errors << e.message
+        rescue => exception
+          if exception.respond_to?(:errors)
+            exception.errors.each{|e| errors.push("#{e[0]}: #{e[1].join(',')}")}
+          else
+            errors.push(exception.message)
+          end
           raise Sequel::Rollback
         end
       end
