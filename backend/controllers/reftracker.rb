@@ -22,43 +22,23 @@ class ArchivesSpaceService < Sinatra::Base
     end
   end
 
-  Endpoint.post('/repositories/:repo_id/accessions/reftracker_import/:qno')
-    .description("Import a question from RefTracker as an Accession")
+  Endpoint.post('/repositories/:repo_id/reftracker/import/:offer')
+    .description("Import an Offer from RefTracker as an Accession")
     .params(["repo_id", :repo_id],
-            ['qno', String, 'The question number to import'])
-    .permissions([])
+            ['offer', String, 'The offer number to import'])
+    .permissions([:update_accession_record])
     .returns([200, "success"], [404, "not found"]) \
   do
-    # surely someone has written a method for this
-    agent_map = {
-      'agent_person' => AgentPerson,
-      'agent_corporate_entity' => AgentCorporateEntity,
-      'agent_family' => AgentFamily,
-    }
-
-    begin
-
-      rt_question = RefTrackerClient.get_question(params[:qno])
-
-      subject_uris = RefTrackerMapper.map_subjects(rt_question).map{ |subj|
-        JSONModel(:subject).from_hash(subj)
-        Subject.ensure_exists(JSONModel(:subject).from_hash(subj), 'accession').uri
-      }
-
-      agent = RefTrackerMapper.map_agent(rt_question)
-      agent_obj = agent_map[agent['jsonmodel_type']].ensure_exists(agent, 'accession')
-
-      acc = RefTrackerMapper.map_accession(rt_question, agent_obj.uri, subject_uris)
-      acc_obj = Accession.create_from_json(JSONModel(:accession).from_hash(acc))
-
-      events = RefTrackerMapper.map_events(rt_question, acc_obj.uri, agent_obj.uri)
-      events.each{|ev| Event.create_from_json(JSONModel(:event).from_hash(ev))}
-
-      json_response({'status' => 'Import Successful', 'uri' => acc_obj.uri})
-
-    rescue RecordNotFound => e
-      json_response({:error => e.message}, 404)
-    end
+    json_response(RefTrackerHandler.import(params[:offer]))
   end
 
+  Endpoint.post('/repositories/:repo_id/reftracker/bulk_import')
+    .description("Import Offers from RefTracker as Accessions")
+    .params(["repo_id", :repo_id],
+            ['offers', String, 'The Offer numbers to import'])
+    .permissions([:update_accession_record])
+    .returns([200, "success"], [404, "not found"]) \
+  do
+    json_response(RefTrackerHandler.import(params[:offers]))
+  end
 end
