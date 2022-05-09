@@ -26,7 +26,7 @@ migrations and no external gems.
 2.  Unpack it into `/path/to/your/archivesspace/plugins/`
 3.  Add the plugin to your `config.rb` like this: `AppConfig[:plugins] << 'as_reftracker'`
 4.  Add a line to your `config.rb` like this:
-        AppConfig[:reftracker_base_url] = 'https://path/to/your/reftracker/api'
+        `AppConfig[:reftracker_base_url] = 'https://path/to/your/reftracker/api'`
 5.  Restart ArchivesSpace
 
 To confirm installation has been successful, click to open the `Plug-ins`
