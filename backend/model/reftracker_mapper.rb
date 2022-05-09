@@ -100,7 +100,7 @@ class RefTrackerMapper
 
     agent['notes'] = []
 
-    if qp['bib_pubname']
+    if qp['bib_udf_tb04']
       agent['notes'] << {
         'jsonmodel_type' => 'note_general_context',
         'lobel' => 'Vendor Code',
@@ -108,7 +108,7 @@ class RefTrackerMapper
       }
     end
 
-    if qp['question_udf_ta01']
+    if qp['bib_udf_ta03']
       agent['notes'] << {
         'jsonmodel_type' => 'note_bioghist',
         'lobel' => 'Biographical/Historical Notes',
