@@ -5,9 +5,11 @@
 
 <p><%= I18n.t('plugins.reftracker_offers.results.closed_offers') %></p>
 
-<%= form_tag({:controller => :reftracker_offers, :action => :import}) do |f| %>
+<%= form_tag({:controller => :reftracker_offers, :action => :import}) do %>
 
-<button type="submit" class="btn btn-sm btn-primary"><%= I18n.t("plugins.reftracker_offers.import_button_label") %></button>
+<button type="submit" disabled="true" id="rto-submit" class="btn btn-sm btn-primary"><%= I18n.t("plugins.reftracker_offers.import_button_label") %></button>
+
+<br/><br/>
 
 <table class="table table-striped table-bordered table-condensed">
 
@@ -24,7 +26,7 @@
   <% offers.each do |offer| %>
     <tr>
       <td class="rto-td">
-        <input type="checkbox" name="offer_<%= offer['question_no'] %>"/>
+        <input type="checkbox" name="offer_<%= offer['question_no'] %>" onchange="reftrackerCheckboxClick();"/>
       </td>
       <td class="rto-td rto-nowrap">
         <%= offer['question_no'] %>
@@ -50,3 +52,17 @@
 </table>
 
 <% end %>
+
+<script>
+  $('#rto-submit').prop('disabled', true);
+  $('input[type=checkbox][name^=offer_]').prop('checked', false);
+
+  var reftrackerCheckboxClick = function() {
+    if ($('input[type=checkbox][name^=offer_]').is(':checked')) {
+      $('#rto-submit').prop('disabled', false);
+    } else {
+      $('#rto-submit').prop('disabled', true);
+    }
+  };
+</script>
+

@@ -4,7 +4,7 @@ en:
       label: RefTracker Offers
       import_button_label: Import
       results:
-        closed_offers: Showing closed offers, most recent first.
+        closed_offers: Showing closed offers, most recent first. Select offers using the checkboxes and click Import to import them as Accessions.
         question_no: "Offer #"
         bib_udf_tb03: Identifier
         client_name: Offerer
