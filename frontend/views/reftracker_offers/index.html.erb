@@ -1,0 +1,52 @@
+
+<h2><%= I18n.t('plugins.reftracker_offers.label') %></h2>
+
+<%= render_aspace_partial :partial => "shared/form_messages" %>
+
+<p><%= I18n.t('plugins.reftracker_offers.results.closed_offers') %></p>
+
+<%= form_tag({:controller => :reftracker_offers, :action => :import}) do |f| %>
+
+<button type="submit" class="btn btn-sm btn-primary"><%= I18n.t("plugins.reftracker_offers.import_button_label") %></button>
+
+<table class="table table-striped table-bordered table-condensed">
+
+  <tr>
+    <th></th>
+    <th><%= I18n.t('plugins.reftracker_offers.results.question_no') %></th>
+    <th><%= I18n.t('plugins.reftracker_offers.results.client_name') %></th>
+    <th><%= I18n.t('plugins.reftracker_offers.results.bib_udf_tb03') %></th>
+    <th><%= I18n.t('plugins.reftracker_offers.results.bib_title') %></th>
+    <th><%= I18n.t('plugins.reftracker_offers.results.question_text') %></th>
+    <th><%= I18n.t('plugins.reftracker_offers.results.question_closed_datetime') %></th>
+  </tr>
+
+  <% offers.each do |offer| %>
+    <tr>
+      <td class="rto-td">
+        <input type="checkbox" name="offer_<%= offer['question_no'] %>"/>
+      </td>
+      <td class="rto-td rto-nowrap">
+        <%= offer['question_no'] %>
+      </td>
+      <td class="rto-td rto-nowrap">
+        <%= offer['client_name'] %>
+      </td>
+      <td class="rto-td rto-nowrap">
+        <%= offer['bib_udf_tb03'] %>
+      </td>
+      <td class="rto-td">
+        <%= offer['bib_title'] %>
+      </td>
+      <td class="rto-td">
+        <%= offer['question_text'] %>
+      </td>
+      <td class="rto-td rto-nowrap">
+        <%= offer['question_closed_datetime'].split[0] %>
+      </td>
+    </tr>
+  <% end %>
+
+</table>
+
+<% end %>
