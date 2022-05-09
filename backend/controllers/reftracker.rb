@@ -9,14 +9,14 @@ class ArchivesSpaceService < Sinatra::Base
     RefTrackerClient.closed_offers(params[:page])
   end
 
-  Endpoint.get('/plugins/reftracker/question/:qno')
-    .description("Get a question from RefTracker")
-    .params(['qno', String, 'The question number to get'])
+  Endpoint.get('/plugins/reftracker/offer/:ono')
+    .description("Get an offer from RefTracker")
+    .params(['ono', String, 'The offer number to get'])
     .permissions([])
-    .returns([200, "question"], [404, 'not found']) \
+    .returns([200, "offer"], [404, 'not found']) \
   do
     begin
-      json_response(RefTrackerClient.get_question(params[:qno]))
+      json_response(RefTrackerClient.get_question(params[:ono]))
     rescue RecordNotFound => e
       json_response({:error => e.message}, 404)
     end
