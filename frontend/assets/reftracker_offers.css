@@ -6,3 +6,25 @@
 .rto-td {
     vertical-align: middle !important;
 }
+
+.rto-page-link:hover {
+    background: #ddf;
+}
+
+.rto-page-link {
+    border: 1px solid #99f;
+    margin: 4px 2px 4px 2px;
+    padding: 4px 6px 4px 6px;
+    color: #66f;
+}
+
+.rto-page-not-link {
+    border: 1px solid #999;
+    margin: 4px 2px 4px 2px;
+    padding: 4px 6px 4px 6px;
+    color: #666;
+}
+
+.rto-pagination {
+    margin-bottom: 8px;
+}

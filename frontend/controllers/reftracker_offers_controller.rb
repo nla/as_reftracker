@@ -3,7 +3,7 @@ class ReftrackerOffersController < ApplicationController
   set_access_control "update_accession_record" => [:index, :import]
 
   def index
-    render :locals => { :offers => JSONModel::HTTP::get_json('/plugins/reftracker/offers') }
+    render :locals => { :offers => JSONModel::HTTP::get_json('/plugins/reftracker/offers', :page => params['page']) }
   end
 
   def import
