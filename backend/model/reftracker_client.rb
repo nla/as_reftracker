@@ -34,11 +34,13 @@ class RefTrackerClient
               ]
 
     # status of 700 is 'Closed successful' found this using /codetable?table=status
+    # qtype of 100 is 'Offerer service' - new requirement
     # db = 5 is a magic number from the original plugin.
     #        without it the api complains about missing a param called 'source'
     # sortby = 3 is ClosedDate
     search_params = {
       :status => '700',
+      :qtype => '100',
       :db => '5',
       :sortby => '3',
       :sortorder => 'DESC',

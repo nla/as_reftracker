@@ -77,6 +77,7 @@ class RefTrackerMapper
     agent = {}
 
     # these come in as: Person, Corporate entity, Family
+    raise "Offer: #{qp['question_no']} does not have an Agent type set" unless qp['client_udf_cl01']
     type = self.agent_type_map[qp['client_udf_cl01']]
 
     agent['jsonmodel_type'] = type
@@ -103,7 +104,7 @@ class RefTrackerMapper
     if qp['bib_udf_tb04']
       agent['notes'] << {
         'jsonmodel_type' => 'note_general_context',
-        'lobel' => 'Vendor Code',
+        'label' => 'Vendor Code',
         'subnotes' => [{'jsonmodel_type' => 'note_text', 'content' => qp['bib_udf_tb04']}]
       }
     end
@@ -111,12 +112,23 @@ class RefTrackerMapper
     if qp['bib_udf_ta03']
       agent['notes'] << {
         'jsonmodel_type' => 'note_bioghist',
-        'lobel' => 'Biographical/Historical Notes',
+        'label' => 'Biographical/Historical Notes',
         'subnotes' => [{'jsonmodel_type' => 'note_text', 'content' => qp['bib_udf_ta03']}]
       }
     end
 
     JSONModel::JSONModel(type).from_hash(agent)
+  end
+
+  def self.map_valuation_status(status)
+    @valuation_status_map ||= {
+      'Yes' => 'Valuation Required',
+      'No' => 'Valuation Not Required',
+      'Not sure' => 'Valuation Status Not Yet Determined',
+      'Completed' => 'Valuation Complete'
+    }
+
+    @valuation_status_map[status]
   end
 
 
@@ -128,11 +140,18 @@ class RefTrackerMapper
     acc['id_0'] = qp['bib_udf_tb03']
 
     acc['accession_date'] = qp['question_closed_datetime'].split[0]
-    acc['access_restrictions_note'] = qp['question_udf_ta15']
+
+    acc['access_restrictions_note'] = [
+                                       qp['question_udf_ta15'],
+                                       qp['question_udf_tb06'],
+                                       qp['question_udf_ta12'],
+                                       qp['question_udf_ta14']
+                                      ].compact.join("\n")
+
     acc['acquisition_type'] = qp['question_udf_cl03'].downcase
     acc['content_description'] = qp['question_udf_ta08'] || qp['question_text']
     acc['disposition'] = qp['bib_volume']
-    acc['inventory'] = qp['question_udf_tb11']
+    acc['inventory'] = qp['question_udf_tb02']
     acc['provenance'] = qp['bib_udf_ta01']
     acc['retention_rule'] = qp['question_udf_ta16']
     acc['user_defined'] = {}
@@ -146,13 +165,8 @@ class RefTrackerMapper
     acc['user_defined']['text_2'] = qp['bib_udf_ta02']
     acc['user_defined']['text_4'] = qp['question_udf_tb15']
     acc['user_defined']['text_5'] = qp['question_udf_ta09']
-    acc['user_defined']['controlled_value_1'] = qp['question_udf_cl18']
+    acc['user_defined']['controlled_value_1'] = map_valuation_status(qp['question_udf_cl18'])
     acc['user_defined']['controlled_value_3'] = qp['question_udf_cl01']
-
-    acc['user_defined'][''] = qp['']
-    acc['user_defined'][''] = qp['']
-    acc['user_defined'][''] = qp['']
-    acc['user_defined'][''] = qp['']
 
     acc['extents'] = [{}]
     acc['extents'][0]['container_summary'] = qp['bib_udf_tb01']
