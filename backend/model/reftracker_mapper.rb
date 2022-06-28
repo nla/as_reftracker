@@ -137,7 +137,8 @@ class RefTrackerMapper
 
     acc['title'] = qp['bib_title']
 
-    acc['id_0'] = qp['bib_udf_tb03']
+    acc['id_0'] = qp['bib_number']
+#    acc['id_0'] = qp['bib_udf_tb03']
 
     acc['accession_date'] = qp['question_closed_datetime'].split[0]
 
@@ -157,8 +158,8 @@ class RefTrackerMapper
     acc['user_defined']['text_2'] = qp['bib_udf_ta02']
     acc['user_defined']['text_4'] = qp['question_udf_tb15']
     acc['user_defined']['text_5'] = qp['question_udf_ta09']
-    acc['user_defined']['controlled_value_1'] = map_valuation_status(qp['question_udf_cl18'])
-    acc['user_defined']['controlled_value_3'] = qp['question_udf_cl01']
+    acc['user_defined']['enum_1'] = map_valuation_status(qp['question_udf_cl18'])
+    acc['user_defined']['enum_3'] = qp['question_udf_cl01']
 
     acc['extents'] = [{}]
     acc['extents'][0]['container_summary'] = qp['bib_udf_tb01']
