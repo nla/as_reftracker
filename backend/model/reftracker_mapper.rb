@@ -141,19 +141,11 @@ class RefTrackerMapper
 
     acc['accession_date'] = qp['question_closed_datetime'].split[0]
 
-    acc['access_restrictions_note'] = [
-                                       qp['question_udf_ta15'],
-                                       qp['question_udf_tb06'],
-                                       qp['question_udf_ta12'],
-                                       qp['question_udf_ta14']
-                                      ].compact.join("\n")
-
     acc['acquisition_type'] = qp['question_udf_cl03'].downcase
     acc['content_description'] = qp['question_udf_ta08'] || qp['question_text']
     acc['disposition'] = qp['bib_volume']
     acc['inventory'] = qp['bib_udf_tb02']
     acc['provenance'] = qp['bib_udf_ta01']
-    acc['retention_rule'] = qp['question_udf_ta16']
     acc['user_defined'] = {}
     acc['user_defined']['boolean_1'] = qp['bib_udf_cl01'] == 'New collection'
     acc['user_defined']['integer_2'] = qp['bib_callno']
@@ -175,29 +167,36 @@ class RefTrackerMapper
     acc['extents'][0]['number'] = '1'
     acc['extents'][0]['extent_type'] = 'collection'
 
+
+    acc['access_restrictions_note'] = qp['question_udf_ta15']
+
+    acc['access_restrictions_note'] = self.munge(acc['access_restrictions_note'],
+                                       qp['question_udf_tb06'],
+                                       'SENSITIVITIES')
+
+    acc['access_restrictions_note'] = self.munge(acc['access_restrictions_note'],
+                                       qp['question_udf_ta10'],
+                                       'INDIGENOUS ENGAGEMENT NOTES')
+
+    acc['access_restrictions_note'] = self.munge(acc['access_restrictions_note'],
+                                       qp['question_udf_ta12'],
+                                       'LEGAL TITLE NOTES')
+
+    acc['access_restrictions_note'] = self.munge(acc['access_restrictions_note'],
+                                       qp['question_udf_ta14'],
+                                       'RIGHTS MNGT NOTES')
+
+    # processing notes
+    acc['retention_rule'] = qp['question_udf_ta16']
+
     acc['retention_rule'] = self.munge(acc['retention_rule'],
                                        qp['bib_udf_ta04'],
                                        'STATEMENT OF SIGNIFICANCE')
 
     acc['retention_rule'] = self.munge(acc['retention_rule'],
-                                       qp['question_udf_tb06'],
-                                       'SENSITIVITIES')
-
-    acc['retention_rule'] = self.munge(acc['retention_rule'],
-                                       qp['question_udf_ta10'],
-                                       'INDIGENOUS ENGAGEMENT NOTES')
-
-    acc['retention_rule'] = self.munge(acc['retention_rule'],
-                                       qp['question_udf_ta12'],
-                                       'LEGAL TITLE NOTES')
-
-    acc['retention_rule'] = self.munge(acc['retention_rule'],
-                                       qp['question_udf_ta14'],
-                                       'RIGHTS MNGT NOTES')
-
-    acc['retention_rule'] = self.munge(acc['retention_rule'],
                                        qp['bib_comment'],
                                        'CATALOGUING NOTES')
+
 
     acc['linked_agents'] = [{}]
     acc['linked_agents'][0]['ref'] = agent_uri
