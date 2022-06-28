@@ -21,7 +21,7 @@ class RefTrackerMapper
 
     if qp['question_udf_dt02']
       events << {
-        'event_type' => 'agreement_received',
+        'event_type' => 'agreement_signed',
         'date' => {
           'date_type' => 'single',
           'label' => 'event',
