@@ -151,7 +151,7 @@ class RefTrackerMapper
     acc['acquisition_type'] = qp['question_udf_cl03'].downcase
     acc['content_description'] = qp['question_udf_ta08'] || qp['question_text']
     acc['disposition'] = qp['bib_volume']
-    acc['inventory'] = qp['question_udf_tb02']
+    acc['inventory'] = qp['bib_udf_tb02']
     acc['provenance'] = qp['bib_udf_ta01']
     acc['retention_rule'] = qp['question_udf_ta16']
     acc['user_defined'] = {}
