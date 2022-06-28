@@ -1,4 +1,5 @@
 require 'net/http'
+require 'nokogiri'
 
 class ReftrackerAPIException < StandardError; end
 
@@ -19,7 +20,8 @@ class RefTrackerClient
       raise RecordNotFound.new("No Question for number #{question_no}")
     end
 
-    resp
+    # decode and strip markup - phewee - reftracker is not being friendly here
+    Hash[resp.map {|k, v| [k, Nokogiri::XML.fragment(Nokogiri::XML.fragment(v).text.gsub('&', '&amp;')).text]}]
   end
 
 
