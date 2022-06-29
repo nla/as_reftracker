@@ -137,8 +137,7 @@ class RefTrackerMapper
 
     acc['title'] = qp['bib_title']
 
-    acc['id_0'] = qp['bib_number']
-#    acc['id_0'] = qp['bib_udf_tb03']
+    acc['id_0'] = qp['bib_udf_tb03']
 
     acc['accession_date'] = qp['question_closed_datetime'].split[0]
 
