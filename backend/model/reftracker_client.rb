@@ -11,9 +11,7 @@ class RefTrackerClient
 
 
   def self.get_question(question_no)
-#    resp = ASUtils.json_parse(self.get('getQuestion', {:parameters => {:key => 'question_no', :value => question_no, :format => 'json'}.to_json}))
-
-    resp = ASUtils.json_parse(File.read(File.join(File.dirname(__FILE__), '..', '..', 'samples', 'question.json')))
+    resp = ASUtils.json_parse(self.get('getQuestion', {:parameters => {:key => 'question_no', :value => question_no, :format => 'json'}.to_json}))
 
     # if the question doesn't exist it returns this:
     #   [{"result":"No Question for these parameters   format:json  key:question_no  value:blah","status":"200"}]
