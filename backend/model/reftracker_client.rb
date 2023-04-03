@@ -55,8 +55,16 @@ class RefTrackerClient
 
 
   def self.get(uri, params = {})
+    env = AppConfig[:environment]
     url = URI(File.join(AppConfig[:reftracker_base_url], uri))
     url.query = URI.encode_www_form(params) unless params.empty?
-    Net::HTTP.get(url)
-  end
+
+    http = Net::HTTP.new(url.host, url.port)
+    if env == 'development'
+      http.use_ssl = true
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    end
+
+    response = http.get(url.request_uri)
+    response.body  end
 end
