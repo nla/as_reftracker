@@ -150,8 +150,6 @@ class RefTrackerMapper
     acc['user_defined']['boolean_1'] = qp['bib_udf_cl01'] == 'New collection'
     acc['user_defined']['integer_2'] = qp['bib_callno']
 
-    acc['user_defined']['real_3'] = qp['bib_price_actual'].gsub(/,/, '') if qp['bib_price_actual']
-
     acc['user_defined']['string_2'] = qp['question_no']
     acc['user_defined']['string_3'] = qp['question_udf_tb08']
     acc['user_defined']['text_2'] = qp['bib_udf_ta02']
