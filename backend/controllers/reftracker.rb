@@ -22,6 +22,20 @@ class ArchivesSpaceService < Sinatra::Base
     end
   end
 
+  Endpoint.get('/plugins/reftracker/codetable/:table')
+    .description("Get a RefTracker code table")
+    .params(['table', String, 'The code table to get'])
+    .permissions([])
+    .returns([200, "codetable"], [404, 'not found']) \
+  do
+    begin
+      # FIXME: came back as a quoted string of json, might need to parse it
+      json_response(RefTrackerClient.get_codetable(params[:table]))
+    rescue RecordNotFound => e
+      json_response({:error => e.message}, 404)
+    end
+  end
+
   Endpoint.post('/repositories/:repo_id/reftracker/import/:offer')
     .description("Import an Offer from RefTracker as an Accession")
     .params(["repo_id", :repo_id],

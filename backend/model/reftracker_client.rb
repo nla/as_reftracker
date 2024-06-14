@@ -32,25 +32,48 @@ class RefTrackerClient
                'bib_udf_tb03',
                'bib_title',
                'client_name',
+               'question_format',
+               'question_update_datetime',
                'question_closed_datetime',
               ]
 
     # status of 700 is 'Closed successful' found this using /codetable?table=status
+    # :status => '700' - not doing this any more
+
     # qtype of 100 is 'Offerer service' - new requirement
     # db = 5 is a magic number from the original plugin.
     #        without it the api complains about missing a param called 'source'
     # sortby = 3 is ClosedDate
+
+    # last update: qnudt - can't sort by this so qno instead
+    # :sortby => '50' is question_no
+
+    # question_format = Manuscripts
+    # :qnfmid => '10' 
+
     search_params = {
-      :status => '700',
       :qtype => '100',
+      :qnfmid => '10',
       :db => '5',
-      :sortby => '3',
+      :sortby => '50',
       :sortorder => 'DESC',
       :columnList => columns.join('|'),
       :pagenumber => page,
       :pagesize => 20,
     }
     self.get('search', {:parameters => search_params.to_json})
+  end
+
+
+  # ok now got an endpoint for codetables:
+  # format is format so:
+  # /plugins/reftracker/codetable/format
+  # tells me that format for Manuscripts is 10
+  def self.get_codetable(table)
+    search_params = {
+      :codetable => table,
+    }
+    self.get('codetable', {:parameters => search_params.to_json})
   end
 
 
