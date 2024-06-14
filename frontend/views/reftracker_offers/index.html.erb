@@ -3,7 +3,8 @@
 
 <%= render_aspace_partial :partial => "shared/form_messages" %>
 
-<p><%= I18n.t('plugins.reftracker_offers.results.closed_offers') %></p>
+<p><%= I18n.t('plugins.reftracker_offers.results.offers_description') %></p>
+<p><%= I18n.t('plugins.reftracker_offers.results.offers_instruction') %></p>
 
 <%= form_tag({:controller => :reftracker_offers, :action => :import}) do %>
 
@@ -40,16 +41,16 @@
         <%= offer['question_no'] %>
       </td>
       <td class="rto-td rto-nowrap">
-        <%= offer['client_name'] %>
+        <%= offer['client_name'].html_safe %>
       </td>
       <td class="rto-td rto-nowrap">
         <%= offer['bib_udf_tb03'] %>
       </td>
       <td class="rto-td">
-        <%= offer['bib_title'] %>
+        <%= offer['bib_title'].html_safe %>
       </td>
       <td class="rto-td">
-        <%= offer['question_text'] %>
+        <%= offer['question_text'].html_safe %>
       </td>
       <td class="rto-td rto-nowrap">
         <%= offer['question_closed_datetime'].split[0] %>
