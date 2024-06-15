@@ -34,7 +34,6 @@ class RefTrackerClient
                'client_name',
                'question_format',
                'question_update_datetime',
-               'question_closed_datetime',
               ]
 
     # status of 700 is 'Closed successful' found this using /codetable?table=status
@@ -43,7 +42,7 @@ class RefTrackerClient
     # qtype of 100 is 'Offerer service' - new requirement
     # db = 5 is a magic number from the original plugin.
     #        without it the api complains about missing a param called 'source'
-    # sortby = 3 is ClosedDate
+    # sortby = 3 is ClosedDate -- no longer using this
 
     # last update: qnudt - can't sort by this so qno instead
     # :sortby => '50' is question_no

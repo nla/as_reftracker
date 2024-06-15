@@ -29,7 +29,6 @@
     <th><%= I18n.t('plugins.reftracker_offers.results.bib_udf_tb03') %></th>
     <th><%= I18n.t('plugins.reftracker_offers.results.bib_title') %></th>
     <th><%= I18n.t('plugins.reftracker_offers.results.question_text') %></th>
-    <th><%= I18n.t('plugins.reftracker_offers.results.question_closed_datetime') %></th>
   </tr>
 
   <% offers.each do |offer| %>
@@ -51,9 +50,6 @@
       </td>
       <td class="rto-td">
         <%= offer['question_text'].html_safe %>
-      </td>
-      <td class="rto-td rto-nowrap">
-        <%= offer['question_closed_datetime'].split[0] %>
       </td>
     </tr>
   <% end %>
