@@ -25,7 +25,7 @@ class RefTrackerClient
   end
 
 
-  def self.closed_offers(page = 1)
+  def self.manuscript_offers(page = 1)
     columns = [
                'question_no',
                'question_text',
@@ -62,6 +62,19 @@ class RefTrackerClient
       :pagesize => 20,
     }
     self.get('search', {:parameters => search_params.to_json})
+
+    # here's how accession.identifier looks in the db :(
+    # ["moo",null,null,null]
+    # NLA only uses id_0 so this works
+    offer_ids = offers.map{|offer| offer['bib_udf_tb03']}.select{|id| !id.empty?}.map{|id| '["' + id + '",null,null,null]'}.compact
+
+
+    # find out which of the offer_ids already exist in AS
+    found_ids = nil
+    DB.open{ |db| found_ids = db[:accession].filter(:identifier => offer_ids).select(:identifier).map{|i| ASUtils.json_parse(i[:identifier]).first}}
+
+    # then filter out the found ids, and any offers without an id
+    offers.select{|offer| !offer['bib_udf_tb03'].empty? && !found_ids.include?(offer['bib_udf_tb03'])}
   end
 
 

@@ -6,7 +6,7 @@ class ArchivesSpaceService < Sinatra::Base
     .permissions([])
     .returns([200, "[offers]"]) \
   do
-    RefTrackerClient.closed_offers(params[:page])
+    json_response(RefTrackerClient.manuscript_offers(params[:page]))
   end
 
   Endpoint.get('/plugins/reftracker/offer/:ono')
