@@ -29,8 +29,7 @@ class ArchivesSpaceService < Sinatra::Base
     .returns([200, "codetable"], [404, 'not found']) \
   do
     begin
-      # FIXME: came back as a quoted string of json, might need to parse it
-      json_response(RefTrackerClient.get_codetable(params[:table]))
+      RefTrackerClient.get_codetable(params[:table])
     rescue RecordNotFound => e
       json_response({:error => e.message}, 404)
     end
