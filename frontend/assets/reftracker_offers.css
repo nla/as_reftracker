@@ -6,3 +6,7 @@
 .rto-td {
     vertical-align: middle !important;
 }
+
+.rto-full-description-pane {
+    display: none;
+}

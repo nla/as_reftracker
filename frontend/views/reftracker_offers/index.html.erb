@@ -49,7 +49,16 @@
         <%= offer['bib_title'].html_safe %>
       </td>
       <td class="rto-td">
-        <%= offer['question_text'].html_safe %>
+        <% if offer['short_description'] %>
+          <%= offer['short_description'].html_safe %>
+          ...
+          <a class="pull-right btn btn-sm btn-default rto-more-btn" onclick="reftrackerMoreButtonClick(this);">View full description</a>
+          <div data-offer="<%= offer['question_no'] %>" class="rto-full-description-pane">
+            <%= offer['question_text'].html_safe %>
+          </div>
+        <% else %>
+          <%= offer['question_text_stripped'].html_safe %>
+        <% end %>
       </td>
     </tr>
   <% end %>
@@ -109,6 +118,11 @@
     } else {
       $('#rto-submit').prop('disabled', true);
     }
+  };
+
+  var reftrackerMoreButtonClick = function(btn) {
+    var fullDesc = btn.nextElementSibling;
+    AS.openQuickModal(fullDesc.dataset.offer + ' full description', fullDesc.innerText);
   };
 </script>
 

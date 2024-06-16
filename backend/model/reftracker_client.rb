@@ -10,6 +10,11 @@ class RefTrackerClient
   end
 
 
+  def self.strip_markup(text)
+    Nokogiri::XML.fragment(Nokogiri::XML.fragment(text).text.gsub('&', '&amp;')).text
+  end
+
+
   def self.get_question(question_no)
     resp = ASUtils.json_parse(self.get('getQuestion', {:parameters => {:key => 'question_no', :value => question_no, :format => 'json'}.to_json}))
 
@@ -21,7 +26,7 @@ class RefTrackerClient
     end
 
     # decode and strip markup - phewee - reftracker is not being friendly here
-    Hash[resp.map {|k, v| [k, Nokogiri::XML.fragment(Nokogiri::XML.fragment(v).text.gsub('&', '&amp;')).text]}]
+    Hash[resp.map {|k, v| [k, strip_markup(v)]}]
   end
 
 
@@ -74,6 +79,13 @@ class RefTrackerClient
 
     # then filter out the found ids, and any offers without an id
     offers.select{|offer| !offer['bib_udf_tb03'].empty? && !found_ids.include?(offer['bib_udf_tb03'])}
+      .map do |offer|
+      offer['question_text_stripped'] = strip_markup(offer['question_text'])
+      if offer['question_text_stripped'].length > 400
+        offer['short_description'] = offer['question_text_stripped'][0..400]
+      end
+      offer
+    end
   end
 
 
