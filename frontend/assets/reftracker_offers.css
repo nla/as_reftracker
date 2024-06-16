@@ -3,6 +3,10 @@
     white-space: nowrap;
 }
 
+.rto-title {
+    min-width: 200px;
+}
+
 .rto-td {
     vertical-align: middle !important;
 }
