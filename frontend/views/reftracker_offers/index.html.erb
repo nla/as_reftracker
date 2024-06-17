@@ -3,7 +3,32 @@
 
 <%= render_aspace_partial :partial => "shared/form_messages" %>
 
-<p><%= I18n.t('plugins.reftracker_offers.results.offers_description') %></p>
+<% if offer_number %>
+  <% if error %>
+    <p class="alert alert-danger"><%= I18n.t('plugins.reftracker_offers.results.offer_error_description', :offer_number => offer_number) %>: <%= error %></p>
+  <% else %>
+    <p class="alert alert-info"><%= I18n.t('plugins.reftracker_offers.results.found_offer_description', :offer_number => offer_number) %></p>
+  <% end %>
+<% else %>
+  <% if error %>
+    <p class="alert alert-danger"><%= I18n.t('plugins.reftracker_offers.results.offers_error_description') %>: <%= error %></p>
+  <% else %>
+    <p class="alert alert-info"><%= I18n.t('plugins.reftracker_offers.results.offers_description') %></p>
+  <% end %>
+<% end %>
+
+<%= form_tag({:controller => :reftracker_offers, :action => :index}, :method => :get) do %>
+
+  <input type="text" name="offer_number" placeholder="Enter an offer number" value="<%= offer_number %>">
+  <button type="submit" id="rto-offer-submit" class="btn btn-sm btn-primary"><%= I18n.t("plugins.reftracker_offers.find_button_label") %></button>
+
+  <% if offer_number %>
+    <a type="cancel" id="rto-offer-cancel" href="<%= url_for(:controller => :reftracker_offers, :action => :index) %>" class="btn btn-sm btn-default"><%= I18n.t("plugins.reftracker_offers.cancel_find_button_label") %></a>
+  <% end %>
+<% end %>
+
+<hr/>
+
 <p><%= I18n.t('plugins.reftracker_offers.results.offers_instruction') %></p>
 
 <%= form_tag({:controller => :reftracker_offers, :action => :import}) do %>
@@ -12,7 +37,7 @@
 
 <br/><br/>
 
-<% if page = offers.first %>
+<% if (page = offers.first) && page['search_page'] %>
   <% current_page = page['search_page'].to_i %>
   <% last_page = (page['search_total'].to_f / page['search_page_size'].to_f).ceil %>
   <p>
@@ -45,7 +70,7 @@
       <td class="rto-td rto-nowrap">
         <%= offer['bib_udf_tb03'] %>
       </td>
-      <td class="rto-td">
+      <td class="rto-td rto-title">
         <%= offer['bib_title'].html_safe %>
       </td>
       <td class="rto-td">
@@ -67,7 +92,7 @@
 
 <% end %>
 
-<% if page = offers.first %>
+<% if (page = offers.first) && page['search_page'] %>
   <% current_page = page['search_page'].to_i %>
   <% last_page = (page['search_total'].to_f / page['search_page_size'].to_f).ceil %>
   <% if last_page > 1 %>

@@ -3,7 +3,15 @@ class ReftrackerOffersController < ApplicationController
   set_access_control "update_accession_record" => [:index, :import]
 
   def index
-    render :locals => { :offers => JSONModel::HTTP::get_json('/plugins/reftracker/offers', :page => params['page']) }
+    offers = JSONModel::HTTP::get_json('/plugins/reftracker/offers', :page => (params['page'] || 1), :ono => params['offer_number'])
+    error = nil
+    if offers.is_a?(Hash) && offers['error']
+      error = offers['error']
+      offers = []
+    end
+    render :locals => { :offers => offers,
+                        :offer_number => params['offer_number'],
+                        :error => error }
   end
 
   def import

@@ -22,7 +22,7 @@ class RefTrackerClient
     #   [{"result":"No Question for these parameters   format:json  key:question_no  value:blah","status":"200"}]
     # so just going to assume if it is an array then it wasn't found - otherwise it would be a hash
     if resp.is_a? Array
-      raise RecordNotFound.new("No Question for number #{question_no}")
+      raise ReftrackerAPIException.new("No offer for number #{question_no}")
     end
 
     # decode and strip markup - phewee - reftracker is not being friendly here
@@ -30,48 +30,59 @@ class RefTrackerClient
   end
 
 
-  def self.manuscript_offers(page = 1)
-    columns = [
-               'question_no',
-               'question_text',
-               'bib_udf_tb03',
-               'bib_title',
-               'client_name',
-               'question_format',
-               'question_update_datetime',
-              ]
+  def self.manuscript_offers(page = 1, offer_number)
+    offers = []
+    if offer_number
+      resp = ASUtils.json_parse(self.get('getQuestion', {:parameters => {:key => 'question_no', :value => offer_number, :format => 'json'}.to_json}))
 
-    # status of 700 is 'Closed successful' found this using /codetable?table=status
-    # :status => '700' - not doing this any more
+      if resp.is_a? Array
+        raise ReftrackerAPIException.new("No offer for number #{offer_number}")
+      end
 
-    # qtype of 100 is 'Offerer service' - new requirement
-    # db = 5 is a magic number from the original plugin.
-    #        without it the api complains about missing a param called 'source'
-    # sortby = 3 is ClosedDate -- no longer using this
+      offers << resp
+    else
+      columns = [
+                 'question_no',
+                 'question_text',
+                 'bib_udf_tb03',
+                 'bib_title',
+                 'client_name',
+                 'question_format',
+                 'question_update_datetime',
+                ]
 
-    # last update: qnudt - can't sort by this so qno instead
-    # :sortby => '50' is question_no
+      # status of 700 is 'Closed successful' found this using /codetable?table=status
+      # :status => '700' - not doing this any more
 
-    # question_format = Manuscripts
-    # :qnfmid => '10' 
+      # qtype of 100 is 'Offerer service' - new requirement
+      # db = 5 is a magic number from the original plugin.
+      #        without it the api complains about missing a param called 'source'
+      # sortby = 3 is ClosedDate -- no longer using this
 
-    search_params = {
-      :qtype => '100',
-      :qnfmid => '10',
-      :db => '5',
-      :sortby => '50',
-      :sortorder => 'DESC',
-      :columnList => columns.join('|'),
-      :pagenumber => page,
-      :pagesize => 20,
-    }
-    self.get('search', {:parameters => search_params.to_json})
+      # last update: qnudt - can't sort by this so qno instead
+      # :sortby => '50' is question_no
+
+      # question_format = Manuscripts
+      # :qnfmid => '10' 
+
+      search_params = {
+        :qtype => '100',
+        :qnfmid => '10',
+        :db => '5',
+        :sortby => '50',
+        :sortorder => 'DESC',
+        :columnList => columns.join('|'),
+        :pagenumber => page,
+        :pagesize => 20,
+      }
+
+      offers = ASUtils.json_parse(self.get('search', {:parameters => search_params.to_json}))
+    end
 
     # here's how accession.identifier looks in the db :(
     # ["moo",null,null,null]
     # NLA only uses id_0 so this works
     offer_ids = offers.map{|offer| offer['bib_udf_tb03']}.select{|id| !id.empty?}.map{|id| '["' + id + '",null,null,null]'}.compact
-
 
     # find out which of the offer_ids already exist in AS
     found_ids = nil
@@ -102,8 +113,16 @@ class RefTrackerClient
 
 
   def self.get(uri, params = {})
-    url = URI(File.join(AppConfig[:reftracker_base_url], uri))
-    url.query = URI.encode_www_form(params) unless params.empty?
-    Net::HTTP.get(url)
+    begin
+      url = URI(File.join(AppConfig[:reftracker_base_url], uri))
+      url.query = URI.encode_www_form(params) unless params.empty?
+      Net::HTTP.get(url)
+    rescue => e
+      if e.class == SocketError
+        raise ReftrackerAPIException.new('Failed to connect to Reftracker')
+      else
+        raise ReftrackerAPIException.new(e.message)
+      end
+    end
   end
 end

@@ -3,8 +3,13 @@ en:
     reftracker_offers:
       label: RefTracker Offers
       import_button_label: Import
+      find_button_label: Find Offer
+      cancel_find_button_label: Cancel
       results:
-        offers_description: Showing Manuscripts offers, in descending offer number order, excluding those that lack an identifier and those with identifiers that are already in ArchivesSpace.
+        offers_description: Showing <b>Manuscripts</b> offers <b>with an identifier</b> that is <b>not already in ArchivesSpace</b>, in descending offer number order.
+        offers_error_description: Problem retrieving offers
+        found_offer_description: Showing offer <b>%{offer_number}</b>. Click Cancel to see all offers.
+        offer_error_description: Problem finding offer <b>%{offer_number}</b>
         offers_instruction: Select offers using the checkboxes and click Import to import them as Accessions.
         question_no: "Offer #"
         bib_udf_tb03: Identifier
