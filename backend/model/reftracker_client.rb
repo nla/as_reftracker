@@ -119,7 +119,7 @@ class RefTrackerClient
       Net::HTTP.get(url)
     rescue => e
       if e.class == SocketError
-        raise ReftrackerAPIException.new('Failed to connect to Reftracker')
+        raise ReftrackerAPIException.new('Failed to connect to RefTracker')
       else
         raise ReftrackerAPIException.new(e.message)
       end
