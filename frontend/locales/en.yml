@@ -6,6 +6,7 @@ en:
       find_button_label: Find Offer
       cancel_find_button_label: Cancel
       results:
+        results_current_at: "RefTracker results current at: <b>%{time}</b>"
         offers_description: Showing <b>Manuscripts</b> offers <b>with an identifier</b> that is <b>not already in ArchivesSpace</b>, in descending offer number order.
         offers_error_description: Problem retrieving offers
         found_offer_description: Showing offer <b>%{offer_number}</b>. Click Cancel to see all offers.

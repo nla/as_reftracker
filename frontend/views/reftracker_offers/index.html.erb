@@ -29,6 +29,8 @@
 
 <hr/>
 
+<p><%= I18n.t('plugins.reftracker_offers.results.results_current_at', :time => Time.now.rfc2822) %></p>
+
 <p><%= I18n.t('plugins.reftracker_offers.results.offers_instruction') %></p>
 
 <%= form_tag({:controller => :reftracker_offers, :action => :import}) do %>
