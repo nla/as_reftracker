@@ -118,7 +118,7 @@ class RefTrackerClient
       url.query = URI.encode_www_form(params) unless params.empty?
       Net::HTTP.get(url)
     rescue => e
-      if e.class == SocketError
+      if [SocketError, IOError].include?(e.class)
         raise ReftrackerAPIException.new('Failed to connect to RefTracker')
       else
         raise ReftrackerAPIException.new(e.message)
