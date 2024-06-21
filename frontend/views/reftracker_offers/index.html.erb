@@ -33,107 +33,57 @@
 
 <p><%= I18n.t('plugins.reftracker_offers.results.offers_instruction') %></p>
 
+<hr/>
+
 <%= form_tag({:controller => :reftracker_offers, :action => :import}) do %>
 
-<button type="submit" disabled="true" id="rto-submit" class="btn btn-sm btn-primary"><%= I18n.t("plugins.reftracker_offers.import_button_label") %></button>
+  <button type="submit" disabled="true" id="rto-submit" class="btn btn-sm btn-primary"><%= I18n.t("plugins.reftracker_offers.import_button_label") %></button>
 
-<br/><br/>
+  <hr/>
 
-<% if (page = offers.first) && page['search_page'] %>
-  <% current_page = page['search_page'].to_i %>
-  <% last_page = (page['search_total'].to_f / page['search_page_size'].to_f).ceil %>
-  <p>
-    Showing page <strong><%= current_page %></strong> of <strong><%= last_page %></strong>
-  </p>
-<% end %>
-
-<table class="table table-striped table-bordered table-condensed">
-
-  <tr>
-    <th></th>
-    <th><%= I18n.t('plugins.reftracker_offers.results.question_no') %></th>
-    <th><%= I18n.t('plugins.reftracker_offers.results.client_name') %></th>
-    <th><%= I18n.t('plugins.reftracker_offers.results.bib_udf_tb03') %></th>
-    <th><%= I18n.t('plugins.reftracker_offers.results.bib_title') %></th>
-    <th><%= I18n.t('plugins.reftracker_offers.results.question_text') %></th>
-  </tr>
-
-  <% offers.each do |offer| %>
+  <table class="table table-striped table-bordered table-condensed">
     <tr>
-      <td class="rto-td">
-        <input type="checkbox" name="offer_<%= offer['question_no'] %>" onchange="reftrackerCheckboxClick();"/>
-      </td>
-      <td class="rto-td rto-nowrap">
-        <%= offer['question_no'] %>
-      </td>
-      <td class="rto-td rto-nowrap">
-        <%= offer['client_name'].html_safe %>
-      </td>
-      <td class="rto-td rto-nowrap">
-        <%= offer['bib_udf_tb03'] %>
-      </td>
-      <td class="rto-td rto-title">
-        <%= offer['bib_title'].html_safe %>
-      </td>
-      <td class="rto-td">
-        <% if offer['short_description'] %>
-          <%= offer['short_description'].html_safe %>
-          ...
-          <a class="pull-right btn btn-sm btn-default rto-more-btn" onclick="reftrackerMoreButtonClick(this);">View full description</a>
-          <div data-offer="<%= offer['question_no'] %>" class="rto-full-description-pane">
-            <%= offer['question_text'].html_safe %>
-          </div>
-        <% else %>
-          <%= offer['question_text_stripped'].html_safe %>
-        <% end %>
-      </td>
+      <th></th>
+      <th><%= I18n.t('plugins.reftracker_offers.results.question_no') %></th>
+      <th><%= I18n.t('plugins.reftracker_offers.results.client_name') %></th>
+      <th><%= I18n.t('plugins.reftracker_offers.results.bib_udf_tb03') %></th>
+      <th><%= I18n.t('plugins.reftracker_offers.results.bib_title') %></th>
+      <th><%= I18n.t('plugins.reftracker_offers.results.question_text') %></th>
     </tr>
-  <% end %>
 
-</table>
-
-<% end %>
-
-<% if (page = offers.first) && page['search_page'] %>
-  <% current_page = page['search_page'].to_i %>
-  <% last_page = (page['search_total'].to_f / page['search_page_size'].to_f).ceil %>
-  <% if last_page > 1 %>
-
-    <div class="pagination-centered">
-      <ul class="pagination pagination-sm">
-        <% if current_page > 1 %>
-          <li>
-            <%= link_to I18n.t("pagination.previous").html_safe, {:controller => :reftracker_offers, :action => :index, :page => current_page - 1} %>
-          </li>
-        <% else %>
-          <li class="disabled"><a href="#"><%= I18n.t("pagination.previous").html_safe %></a></li>
-        <% end %>
-
-        <% if last_page > 1 %>
-          <% (1..last_page).each do |p| %>
-            <% if p == current_page %>
-              <li class="disabled"><a href="#"><%= p %></a></li>
-            <% else %>
-              <li>
-                <%= link_to p, {:controller => :reftracker_offers, :action => :index, :page => p} %>
-              </li>
-            <% end %>
+    <% offers.each do |offer| %>
+      <tr>
+        <td class="rto-td">
+          <input type="checkbox" name="offer_<%= offer['question_no'] %>" onchange="reftrackerCheckboxClick();"/>
+        </td>
+        <td class="rto-td rto-nowrap">
+          <%= offer['question_no'] %>
+        </td>
+        <td class="rto-td rto-nowrap">
+          <%= offer['client_name'].html_safe %>
+        </td>
+        <td class="rto-td rto-nowrap">
+          <%= offer['bib_udf_tb03'] %>
+        </td>
+        <td class="rto-td rto-title">
+          <%= offer['bib_title'].html_safe %>
+        </td>
+        <td class="rto-td">
+          <% if offer['short_description'] %>
+            <%= offer['short_description'].html_safe %>
+            ...
+            <a class="pull-right btn btn-sm btn-default rto-more-btn" onclick="reftrackerMoreButtonClick(this);">View full description</a>
+            <div data-offer="<%= offer['question_no'] %>" class="rto-full-description-pane">
+              <%= offer['question_text'].html_safe %>
+            </div>
+          <% else %>
+            <%= offer['question_text_stripped'].html_safe %>
           <% end %>
-        <% end %>
-
-        <% if current_page < last_page %>
-          <li>
-            <%= link_to I18n.t("pagination.next").html_safe, {:controller => :reftracker_offers, :action => :index, :page => current_page + 1} %>
-          </li>
-        <% else %>
-          <li class="disabled"><a href="#"><%= I18n.t("pagination.next").html_safe %></a></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
 <% end %>
-
-
 
 <script>
   $('#rto-submit').prop('disabled', true);

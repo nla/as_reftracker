@@ -73,7 +73,7 @@ class RefTrackerClient
         :sortorder => 'DESC',
         :columnList => columns.join('|'),
         :pagenumber => page,
-        :pagesize => 20,
+        :pagesize => 200,
       }
 
       offers = ASUtils.json_parse(self.get('search', {:parameters => search_params.to_json}))
