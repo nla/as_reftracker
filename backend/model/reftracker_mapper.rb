@@ -6,31 +6,9 @@ class RefTrackerMapper
   def self.map_events(qp, accession_uri, agent_uri)
     events = []
 
-    if qp['question_udf_dt01']
-      events << {
-        'event_type' => 'agreement_sent',
-        'date' => {
-          'date_type' => 'single',
-          'label' => 'event',
-          'begin' => qp['question_udf_dt01'].split[0],
-        },
-        'linked_records' => [{'ref' => accession_uri, 'role' => 'source'}],
-        'linked_agents' => [{'ref' => agent_uri, 'role' => 'transmitter'}],
-      }
-    end
-
-    if qp['question_udf_dt02']
-      events << {
-        'event_type' => 'agreement_signed',
-        'date' => {
-          'date_type' => 'single',
-          'label' => 'event',
-          'begin' => qp['question_udf_dt02'].split[0],
-        },
-        'linked_records' => [{'ref' => accession_uri, 'role' => 'source'}],
-        'linked_agents' => [{'ref' => agent_uri, 'role' => 'transmitter'}],
-      }
-    end
+    # NLA no longer requires events
+    # The accession_events plugin is used to create events for all new accessions
+    # Leaving this here as a reminder and a placeholder in case events are needed again
 
     events
   end
