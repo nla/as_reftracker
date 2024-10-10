@@ -33,16 +33,13 @@ class RefTrackerClient
   def self.manuscript_offers(page = 1, offer_number)
     offers = []
     if offer_number
-      # resp = ASUtils.json_parse(self.get('getQuestion', {:parameters => {:key => 'question_no', :value => offer_number, :format => 'json'}.to_json}))
+      resp = ASUtils.json_parse(self.get('getQuestion', {:parameters => {:key => 'question_no', :value => offer_number, :format => 'json'}.to_json}))
 
-      # if resp.is_a? Array
-      #   raise ReftrackerAPIException.new("No offer for number #{offer_number}")
-      # end
+      if resp.is_a? Array
+        raise ReftrackerAPIException.new("No offer for number #{offer_number}")
+      end
 
-      # offers << resp
-
-      # fake it
-      offers << ASUtils.json_parse(File.read('/Users/james/projects/nla/data/reftracker_offer_NLAacq87747.json'))
+      offers << resp
     else
       columns = [
                  'question_no',
@@ -79,10 +76,7 @@ class RefTrackerClient
         :pagesize => 200,
       }
 
-      # offers = ASUtils.json_parse(self.get('search', {:parameters => search_params.to_json}))
-
-      # fake it
-      offers = ASUtils.json_parse(File.read('/Users/james/projects/nla/data/reftracker_offers_sorted.json'))
+      offers = ASUtils.json_parse(self.get('search', {:parameters => search_params.to_json}))
     end
 
     # here's how accession.identifier looks in the db :(
