@@ -6,13 +6,13 @@ records as Accessions.
 ----
 Developed by Hudson Molonglo for the National Library of Australia.
 
-&copy; 2022 Hudson Molonglo Pty Ltd.
+&copy; 2022-2024 Hudson Molonglo Pty Ltd.
 
 ----
 
 ## Compatibility
 
-This plugin was developed against ArchivesSpace v3.2. Although it has not
+This plugin was developed against ArchivesSpace v3.3.1. Although it has not
 been tested against other versions, it will probably work as expected on all
 2.x and 3.x versions.
 
@@ -42,9 +42,10 @@ dropdown in the application toolbar (top right of page). You should see a
 `RefTracker Offers` option.
 
 
-## Import Offers
+## Import Offers as Accessions
 
 1. Click on `Plug-ins` > `RefTracker Offers`
-2. Offers with a status of `Closed successful` are shown, most recently closed first
-3. Click the checkboxes next to the offers you would like to import
+2. Offers with identifiers that are not already in AS are shown in reverse Offer Number order
+3. Offers can also be found individually by Offer Number
+3. Click the checkboxes next to the Offers you would like to import
 4. Click the `Import` button
