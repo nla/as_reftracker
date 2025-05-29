@@ -9,9 +9,17 @@ class RefTrackerClient
     raise "Please set `AppConfig[:reftracker_base_url]` or disable as_reftracker plugin"
   end
 
+  unless AppConfig.has_key?(:reftracker_search_api_key)
+    raise "Please set `AppConfig[:reftracker_search_api_key]` or disable as_reftracker plugin"
+  end
+
+  unless AppConfig.has_key?(:reftracker_get_question_api_key)
+    raise "Please set `AppConfig[:reftracker_get_question_api_key]` or disable as_reftracker plugin"
+  end
+
 
   def self.get_question(question_no)
-    resp = ASUtils.json_parse(self.get('getQuestion', {:parameters => {:key => 'question_no', :value => question_no, :format => 'json'}.to_json}))
+    resp = ASUtils.json_parse(self.get('getQuestion', {:parameters => {:apikey => AppConfig['reftracker_get_question_api_key'], :key => 'question_no', :value => question_no, :format => 'json'}.to_json}))
 
     # if the question doesn't exist it returns this:
     #   [{"result":"No Question for these parameters   format:json  key:question_no  value:blah","status":"200"}]
@@ -41,6 +49,7 @@ class RefTrackerClient
     #        without it the api complains about missing a param called 'source'
     # sortby = 3 is ClosedDate
     search_params = {
+      :apikey => AppConfig['reftracker_search_api_key'],
       :status => '700',
       :qtype => '100',
       :db => '5',

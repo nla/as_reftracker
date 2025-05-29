@@ -25,8 +25,16 @@ migrations and no external gems.
 1.  Download the latest [release](../../releases).
 2.  Unpack it into `/path/to/your/archivesspace/plugins/`
 3.  Add the plugin to your `config.rb` like this: `AppConfig[:plugins] << 'as_reftracker'`
-4.  Add a line to your `config.rb` like this:
-        `AppConfig[:reftracker_base_url] = 'https://path/to/your/reftracker/api'`
+4.  Add lines to the ArchivesSpace `config.rb`:
+
+        AppConfig[:reftracker_base_url] = 'https://path/to/your/reftracker/api'
+
+        AppConfig[:reftracker_mandatory_fields] = { Your list of ArchivesSpace equivalents for Reftracker mandatory fields to be imported }
+        e.g. "accession_number_1, accession_accession_date, agent_role, agent_type, agent_contact_name, agent_name_name_order, agent_name_source, subject_source, subject_term, subject_term_type"
+
+        AppConfig[:reftracker_search_api_key] = { Your Reftracker API key for search (set via Reftracker UI) }
+
+        AppConfig[:reftracker_get_question_api_key] = { Your Reftracker API key for get_question (set via Reftracker UI) }
 5.  Restart ArchivesSpace
 
 To confirm installation has been successful, click to open the `Plug-ins`
