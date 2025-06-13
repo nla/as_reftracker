@@ -3,6 +3,14 @@
     white-space: nowrap;
 }
 
+.rto-title {
+    min-width: 200px;
+}
+
 .rto-td {
     vertical-align: middle !important;
+}
+
+.rto-full-description-pane {
+    display: none;
 }
