@@ -41,7 +41,7 @@ class RefTrackerClient
   def self.manuscript_offers(page = 1, offer_number)
     offers = []
     if offer_number
-      resp = ASUtils.json_parse(self.get('getQuestion', {:parameters => {:key => 'question_no', :value => offer_number, :format => 'json'}.to_json}))
+      resp = ASUtils.json_parse(self.get('getQuestion', {:parameters => {:apikey => AppConfig[:reftracker_get_question_api_key], :key => 'question_no', :value => offer_number, :format => 'json'}.to_json}))
 
       if resp.is_a? Array
         raise ReftrackerAPIException.new("No offer for number #{offer_number}")
