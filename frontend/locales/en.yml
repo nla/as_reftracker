@@ -6,11 +6,11 @@ en:
       find_button_label: Find Offer
       cancel_find_button_label: Cancel
       results:
-        results_current_at: "RefTracker results current at: <b>%{time}</b>"
-        offers_description: Showing <b>Manuscripts</b> offers <b>with an identifier</b> that is <b>not already in ArchivesSpace</b>, in descending offer number order.
+        results_current_at_html: "RefTracker results current at: <b>%{time}</b>"
+        offers_description_html: Showing <b>Manuscripts</b> offers <b>with an identifier</b> that is <b>not already in ArchivesSpace</b>, in descending offer number order.
         offers_error_description: Problem retrieving offers
-        found_offer_description: Showing offer <b>%{offer_number}</b>. Click Cancel to see all offers.
-        offer_error_description: Problem finding offer <b>%{offer_number}</b>
+        found_offer_description_html: Showing offer <b>%{offer_number}</b>. Click Cancel to see all offers.
+        offer_error_description_html: Problem finding offer <b>%{offer_number}</b>
         offers_instruction: Select offers using the checkboxes and click Import to import them as Accessions.
         question_no: "Offer #"
         bib_udf_tb03: Identifier

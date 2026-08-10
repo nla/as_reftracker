@@ -5,15 +5,15 @@
 
 <% if offer_number %>
   <% if error %>
-    <p class="alert alert-danger"><%= I18n.t('plugins.reftracker_offers.results.offer_error_description', :offer_number => offer_number) %>: <%= error %></p>
+    <p class="alert alert-danger"><%= t('plugins.reftracker_offers.results.offer_error_description_html', :offer_number => offer_number) %>: <%= error %></p>
   <% else %>
-    <p class="alert alert-info"><%= I18n.t('plugins.reftracker_offers.results.found_offer_description', :offer_number => offer_number) %></p>
+    <p class="alert alert-info"><%= t('plugins.reftracker_offers.results.found_offer_description_html', :offer_number => offer_number) %></p>
   <% end %>
 <% else %>
   <% if error %>
     <p class="alert alert-danger"><%= I18n.t('plugins.reftracker_offers.results.offers_error_description') %>: <%= error %></p>
   <% else %>
-    <p class="alert alert-info"><%= I18n.t('plugins.reftracker_offers.results.offers_description') %></p>
+    <p class="alert alert-info"><%= t('plugins.reftracker_offers.results.offers_description_html') %></p>
   <% end %>
 <% end %>
 
@@ -29,7 +29,7 @@
 
 <hr/>
 
-<p><%= I18n.t('plugins.reftracker_offers.results.results_current_at', :time => Time.now.rfc2822) %></p>
+<p><%= t('plugins.reftracker_offers.results.results_current_at_html', :time => Time.now.rfc2822) %></p>
 
 <p><%= I18n.t('plugins.reftracker_offers.results.offers_instruction') %></p>
 
