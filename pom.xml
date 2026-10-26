@@ -1,0 +1,27 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>au.gov.nla</groupId>
+  <artifactId>as_reftracker</artifactId>
+  <version>4.2.1-SNAPSHOT</version>
+  <packaging>war</packaging>
+
+  <name>as_reftracker</name>
+
+    <distributionManagement>
+        <repository>
+            <id>nla</id>
+            <name>National Library of Australia Repository</name>
+            <url>https://dev.nla.gov.au/nexus/content/repositories/nla/</url>
+        </repository>
+        <snapshotRepository>
+            <id>nla-snapshots</id>
+            <url>https://dev.nla.gov.au/nexus/content/repositories/nla-snapshots/</url>
+        </snapshotRepository>
+        <site>
+            <id>${project.artifactId}-site</id>
+            <url>${project.baseUri}</url>
+        </site>
+    </distributionManagement>
+
+</project>
